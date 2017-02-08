@@ -39,7 +39,7 @@ public class OfflinePushNickActivity extends BaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				dialog = ProgressDialog.show(OfflinePushNickActivity.this, "update nickname...", "waiting...");
+				dialog = ProgressDialog.show(OfflinePushNickActivity.this, "update usernick...", "waiting...");
 				new Thread(new Runnable() {
 
 					@Override
@@ -50,7 +50,7 @@ public class OfflinePushNickActivity extends BaseActivity {
 						if (!updatenick) {
 							runOnUiThread(new Runnable() {
 								public void run() {
-									Toast.makeText(OfflinePushNickActivity.this, "update nickname failed!",
+									Toast.makeText(OfflinePushNickActivity.this, "update usernick failed!",
 											Toast.LENGTH_SHORT).show();
 									dialog.dismiss();
 								}
@@ -60,7 +60,7 @@ public class OfflinePushNickActivity extends BaseActivity {
 								public void run() {
 									boolean updatenick = SuperWeChatHelper.getInstance().getUserProfileManager().updateCurrentUserNickName(inputNickName.getText().toString());
 									if (!updatenick) {
-										Toast.makeText(OfflinePushNickActivity.this, "update nickname failed!",
+										Toast.makeText(OfflinePushNickActivity.this, "update usernick failed!",
 														Toast.LENGTH_SHORT).show();
 										dialog.dismiss();
 									} else {
