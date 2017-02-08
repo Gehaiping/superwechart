@@ -13,12 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SuperwechartModel {
+public class SuperWeChatModel {
     UserDao dao = null;
     protected Context context = null;
     protected Map<Key,Object> valueCache = new HashMap<Key,Object>();
     
-    public SuperwechartModel(Context ctx){
+    public SuperWeChatModel(Context ctx){
         context = ctx;
         PreferenceManager.init(context);
     }

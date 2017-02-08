@@ -4,7 +4,8 @@ import android.content.Context;
 
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
-import cn.ucai.superwechat.SuperwechartHelper;
+
+import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.utils.PreferenceManager;
 import com.hyphenate.easeui.domain.EaseUser;
 
@@ -27,7 +28,7 @@ public class UserProfileManager {
 	/**
 	 * HuanXin sync contact nick and avatar listener
 	 */
-	private List<SuperwechartHelper.DataSyncListener> syncContactInfosListeners;
+	private List<SuperWeChatHelper.DataSyncListener> syncContactInfosListeners;
 
 	private boolean isSyncingContactInfosWithServer = false;
 
@@ -41,12 +42,12 @@ public class UserProfileManager {
 			return true;
 		}
 		ParseManager.getInstance().onInit(context);
-		syncContactInfosListeners = new ArrayList<SuperwechartHelper.DataSyncListener>();
+		syncContactInfosListeners = new ArrayList<SuperWeChatHelper.DataSyncListener>();
 		sdkInited = true;
 		return true;
 	}
 
-	public void addSyncContactInfoListener(SuperwechartHelper.DataSyncListener listener) {
+	public void addSyncContactInfoListener(SuperWeChatHelper.DataSyncListener listener) {
 		if (listener == null) {
 			return;
 		}
@@ -55,7 +56,7 @@ public class UserProfileManager {
 		}
 	}
 
-	public void removeSyncContactInfoListener(SuperwechartHelper.DataSyncListener listener) {
+	public void removeSyncContactInfoListener(SuperWeChatHelper.DataSyncListener listener) {
 		if (listener == null) {
 			return;
 		}
@@ -76,7 +77,7 @@ public class UserProfileManager {
 				isSyncingContactInfosWithServer = false;
 				// in case that logout already before server returns,we should
 				// return immediately
-				if (!SuperwechartHelper.getInstance().isLoggedIn()) {
+				if (!SuperWeChatHelper.getInstance().isLoggedIn()) {
 					return;
 				}
 				if (callback != null) {
@@ -97,7 +98,7 @@ public class UserProfileManager {
 	}
 
 	public void notifyContactInfosSyncListener(boolean success) {
-		for (SuperwechartHelper.DataSyncListener listener : syncContactInfosListeners) {
+		for (SuperWeChatHelper.DataSyncListener listener : syncContactInfosListeners) {
 			listener.onSyncComplete(success);
 		}
 	}

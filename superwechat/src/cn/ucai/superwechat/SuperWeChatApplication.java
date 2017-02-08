@@ -19,10 +19,10 @@ import android.support.multidex.MultiDex;
 
 import com.easemob.redpacketsdk.RedPacket;
 
-public class SuperwechartApplication extends Application {
+public class SuperWeChatApplication extends Application {
 
 	public static Context applicationContext;
-	private static SuperwechartApplication instance;
+	private static SuperWeChatApplication instance;
 	// login user name
 	public final String PREF_USERNAME = "username";
 	
@@ -39,14 +39,14 @@ public class SuperwechartApplication extends Application {
         instance = this;
         
         //init demo helper
-        SuperwechartHelper.getInstance().init(applicationContext);
+        SuperWeChatHelper.getInstance().init(applicationContext);
 		//red packet code : 初始化红包上下文，开启日志输出开关
 		RedPacket.getInstance().initContext(applicationContext);
 		RedPacket.getInstance().setDebugMode(true);
 		//end of red packet code
 	}
 
-	public static SuperwechartApplication getInstance() {
+	public static SuperWeChatApplication getInstance() {
 		return instance;
 	}
 

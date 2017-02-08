@@ -13,7 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.chat.EMClient;
-import cn.ucai.superwechat.SuperwechartHelper;
+
+import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
 
 public class OfflinePushNickActivity extends BaseActivity {
@@ -57,7 +58,7 @@ public class OfflinePushNickActivity extends BaseActivity {
 						} else {
 							runOnUiThread(new Runnable() {
 								public void run() {
-									boolean updatenick = SuperwechartHelper.getInstance().getUserProfileManager().updateCurrentUserNickName(inputNickName.getText().toString());
+									boolean updatenick = SuperWeChatHelper.getInstance().getUserProfileManager().updateCurrentUserNickName(inputNickName.getText().toString());
 									if (!updatenick) {
 										Toast.makeText(OfflinePushNickActivity.this, "update nickname failed!",
 														Toast.LENGTH_SHORT).show();
