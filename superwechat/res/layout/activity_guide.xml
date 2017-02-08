@@ -30,5 +30,5 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="100dp"
         android:background="@color/register_bg"
-        android:text="@string/login" />
+        android:text="@string/register" />
 </RelativeLayout>
