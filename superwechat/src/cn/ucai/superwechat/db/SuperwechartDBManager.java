@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import cn.ucai.superwechat.Constant;
-import cn.ucai.superwechat.DemoApplication;
+import cn.ucai.superwechat.SuperwechartApplication;
 import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.domain.RobotUser;
 import com.hyphenate.easeui.domain.EaseUser;
@@ -19,17 +19,17 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-public class DemoDBManager {
-    static private DemoDBManager dbMgr = new DemoDBManager();
+public class SuperwechartDBManager {
+    static private SuperwechartDBManager dbMgr = new SuperwechartDBManager();
     private DbOpenHelper dbHelper;
     
-    private DemoDBManager(){
-        dbHelper = DbOpenHelper.getInstance(DemoApplication.getInstance().getApplicationContext());
+    private SuperwechartDBManager(){
+        dbHelper = DbOpenHelper.getInstance(SuperwechartApplication.getInstance().getApplicationContext());
     }
     
-    public static synchronized DemoDBManager getInstance(){
+    public static synchronized SuperwechartDBManager getInstance(){
         if(dbMgr == null){
-            dbMgr = new DemoDBManager();
+            dbMgr = new SuperwechartDBManager();
         }
         return dbMgr;
     }

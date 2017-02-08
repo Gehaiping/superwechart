@@ -45,7 +45,7 @@ public class InviteMessgeDao {
 	 * @return  return cursor of the message
 	 */
 	public Integer saveMessage(InviteMessage message){
-		return DemoDBManager.getInstance().saveMessage(message);
+		return SuperwechartDBManager.getInstance().saveMessage(message);
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public class InviteMessgeDao {
 	 * @param values
 	 */
 	public void updateMessage(int msgId,ContentValues values){
-	    DemoDBManager.getInstance().updateMessage(msgId, values);
+	    SuperwechartDBManager.getInstance().updateMessage(msgId, values);
 	}
 	
 	/**
@@ -62,18 +62,18 @@ public class InviteMessgeDao {
 	 * @return
 	 */
 	public List<InviteMessage> getMessagesList(){
-		return DemoDBManager.getInstance().getMessagesList();
+		return SuperwechartDBManager.getInstance().getMessagesList();
 	}
 	
 	public void deleteMessage(String from){
-	    DemoDBManager.getInstance().deleteMessage(from);
+	    SuperwechartDBManager.getInstance().deleteMessage(from);
 	}
 	
 	public int getUnreadMessagesCount(){
-	    return DemoDBManager.getInstance().getUnreadNotifyCount();
+	    return SuperwechartDBManager.getInstance().getUnreadNotifyCount();
 	}
 	
 	public void saveUnreadMessageCount(int count){
-	    DemoDBManager.getInstance().setUnreadNotifyCount(count);
+	    SuperwechartDBManager.getInstance().setUnreadNotifyCount(count);
 	}
 }

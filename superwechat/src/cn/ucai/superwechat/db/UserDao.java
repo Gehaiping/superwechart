@@ -46,7 +46,7 @@ public class UserDao {
 	 * @param contactList
 	 */
 	public void saveContactList(List<EaseUser> contactList) {
-	    DemoDBManager.getInstance().saveContactList(contactList);
+	    SuperwechartDBManager.getInstance().saveContactList(contactList);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class UserDao {
 	 */
 	public Map<String, EaseUser> getContactList() {
 		
-	    return DemoDBManager.getInstance().getContactList();
+	    return SuperwechartDBManager.getInstance().getContactList();
 	}
 	
 	/**
@@ -64,7 +64,7 @@ public class UserDao {
 	 * @param username
 	 */
 	public void deleteContact(String username){
-	    DemoDBManager.getInstance().deleteContact(username);
+	    SuperwechartDBManager.getInstance().deleteContact(username);
 	}
 	
 	/**
@@ -72,30 +72,30 @@ public class UserDao {
 	 * @param user
 	 */
 	public void saveContact(EaseUser user){
-	    DemoDBManager.getInstance().saveContact(user);
+	    SuperwechartDBManager.getInstance().saveContact(user);
 	}
 	
 	public void setDisabledGroups(List<String> groups){
-	    DemoDBManager.getInstance().setDisabledGroups(groups);
+	    SuperwechartDBManager.getInstance().setDisabledGroups(groups);
     }
     
     public List<String>  getDisabledGroups(){       
-        return DemoDBManager.getInstance().getDisabledGroups();
+        return SuperwechartDBManager.getInstance().getDisabledGroups();
     }
     
     public void setDisabledIds(List<String> ids){
-        DemoDBManager.getInstance().setDisabledIds(ids);
+        SuperwechartDBManager.getInstance().setDisabledIds(ids);
     }
     
     public List<String> getDisabledIds(){
-        return DemoDBManager.getInstance().getDisabledIds();
+        return SuperwechartDBManager.getInstance().getDisabledIds();
     }
     
     public Map<String, RobotUser> getRobotUser(){
-    	return DemoDBManager.getInstance().getRobotList();
+    	return SuperwechartDBManager.getInstance().getRobotList();
     }
     
     public void saveRobotUser(List<RobotUser> robotList){
-    	DemoDBManager.getInstance().saveRobotList(robotList);
+    	SuperwechartDBManager.getInstance().saveRobotList(robotList);
     }
 }

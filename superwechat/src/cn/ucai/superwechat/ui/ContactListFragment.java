@@ -17,8 +17,8 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import com.hyphenate.chat.EMClient;
-import cn.ucai.superwechat.DemoHelper;
-import cn.ucai.superwechat.DemoHelper.DataSyncListener;
+import cn.ucai.superwechat.SuperwechartHelper;
+import cn.ucai.superwechat.SuperwechartHelper.DataSyncListener;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
@@ -77,7 +77,7 @@ public class ContactListFragment extends EaseContactListFragment {
     
     @Override
     public void refresh() {
-        Map<String, EaseUser> m = DemoHelper.getInstance().getContactList();
+        Map<String, EaseUser> m = SuperwechartHelper.getInstance().getContactList();
         if (m instanceof Hashtable<?, ?>) {
             //noinspection unchecked
             m = (Map<String, EaseUser>) ((Hashtable<String, EaseUser>)m).clone();
@@ -108,7 +108,7 @@ public class ContactListFragment extends EaseContactListFragment {
             }
         });
         //设置联系人数据
-        Map<String, EaseUser> m = DemoHelper.getInstance().getContactList();
+        Map<String, EaseUser> m = SuperwechartHelper.getInstance().getContactList();
         if (m instanceof Hashtable<?, ?>) {
             m = (Map<String, EaseUser>) ((Hashtable<String, EaseUser>)m).clone();
         }
@@ -139,17 +139,17 @@ public class ContactListFragment extends EaseContactListFragment {
         
         
         contactSyncListener = new ContactSyncListener();
-        DemoHelper.getInstance().addSyncContactListener(contactSyncListener);
+        SuperwechartHelper.getInstance().addSyncContactListener(contactSyncListener);
         
         blackListSyncListener = new BlackListSyncListener();
-        DemoHelper.getInstance().addSyncBlackListListener(blackListSyncListener);
+        SuperwechartHelper.getInstance().addSyncBlackListListener(blackListSyncListener);
         
         contactInfoSyncListener = new ContactInfoSyncListener();
-        DemoHelper.getInstance().getUserProfileManager().addSyncContactInfoListener(contactInfoSyncListener);
+        SuperwechartHelper.getInstance().getUserProfileManager().addSyncContactInfoListener(contactInfoSyncListener);
         
-        if (DemoHelper.getInstance().isContactsSyncedWithServer()) {
+        if (SuperwechartHelper.getInstance().isContactsSyncedWithServer()) {
             loadingView.setVisibility(View.GONE);
-        } else if (DemoHelper.getInstance().isSyncingContactsWithServer()) {
+        } else if (SuperwechartHelper.getInstance().isSyncingContactsWithServer()) {
             loadingView.setVisibility(View.VISIBLE);
         }
     }
@@ -158,16 +158,16 @@ public class ContactListFragment extends EaseContactListFragment {
     public void onDestroy() {
         super.onDestroy();
         if (contactSyncListener != null) {
-            DemoHelper.getInstance().removeSyncContactListener(contactSyncListener);
+            SuperwechartHelper.getInstance().removeSyncContactListener(contactSyncListener);
             contactSyncListener = null;
         }
         
         if(blackListSyncListener != null){
-            DemoHelper.getInstance().removeSyncBlackListListener(blackListSyncListener);
+            SuperwechartHelper.getInstance().removeSyncBlackListListener(blackListSyncListener);
         }
         
         if(contactInfoSyncListener != null){
-            DemoHelper.getInstance().getUserProfileManager().removeSyncContactInfoListener(contactInfoSyncListener);
+            SuperwechartHelper.getInstance().getUserProfileManager().removeSyncContactInfoListener(contactInfoSyncListener);
         }
     }
     
@@ -250,7 +250,7 @@ public class ContactListFragment extends EaseContactListFragment {
 					// remove user from memory and database
 					UserDao dao = new UserDao(getActivity());
 					dao.deleteContact(tobeDeleteUser.getUsername());
-					DemoHelper.getInstance().getContactList().remove(tobeDeleteUser.getUsername());
+					SuperwechartHelper.getInstance().getContactList().remove(tobeDeleteUser.getUsername());
 					getActivity().runOnUiThread(new Runnable() {
 						public void run() {
 							pd.dismiss();
