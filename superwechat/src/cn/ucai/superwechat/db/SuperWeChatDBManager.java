@@ -419,7 +419,7 @@ public class SuperWeChatDBManager {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Map<String, User> users = new Hashtable<String, User>();
         if (db.isOpen()) {
-            Cursor cursor = db.rawQuery("select * from " + UserDao.USER_COLUMN_NAME /* + " desc" */, null);
+            Cursor cursor = db.rawQuery("select * from " + UserDao.USER_TABLE_NAME /* + " desc" */, null);
             while (cursor.moveToNext()) {
                 User user = new User();
                 user.setMUserName(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_NAME)));
@@ -457,7 +457,7 @@ public class SuperWeChatDBManager {
     synchronized public void saveAppContact(User user) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(UserDao.USER_TABLE_NAME, user.getMUserName());
+        values.put(UserDao.USER_COLUMN_NAME, user.getMUserName());
         if (user.getMUserNick() != null)
             values.put(UserDao.USER_COLUMN_NAME_NICK, user.getMUserNick());
         if (user.getMAvatarId() != null)

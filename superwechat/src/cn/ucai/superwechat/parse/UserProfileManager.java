@@ -159,8 +159,8 @@ public class UserProfileManager {
             public void onSuccess(EaseUser value) {
                 L.e(TAG, "asyncGetCurrentUserInfo,value=" + value);
                 if (value != null) {
-//                    setCurrentUserNick(value.getNick());
-//                    setCurrentUserAvatar(value.getAvatar());
+                    setCurrentUserNick(value.getNick());
+                    setCurrentUserAvatar(value.getAvatar());
                 }
             }
 
@@ -179,9 +179,15 @@ public class UserProfileManager {
                             Result result = ResultUtils.getResultFromJson(s, User.class);
                             if (result != null && result.isRetMsg()) {
                                 User user = (User) result.getRetData();
-                                //save user inf to db
-                                setCurrentUserNick(user.getMUserNick());
-//                                setCurrentUserAvatar(user.getAvatar());
+                                L.e(TAG, "user=" + user);
+                                if (user != null) {
+                                    L.e(TAG, "user=" + user);
+                                    //save user inf to db
+                                    SuperWeChatHelper.getInstance().saveAppContact(user);//保存用户信息到自己的数据库
+                                    L.e(TAG,"user.getMUserNick="+user.getMUserNick());
+                                    setCurrentUserNick(user.getMUserNick());
+                                    setCurrentUserAvatar(user.getAvatar());
+                                }
                             }
                         }
                     }
