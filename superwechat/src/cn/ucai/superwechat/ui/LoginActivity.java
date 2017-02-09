@@ -43,9 +43,11 @@ import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.db.SuperWeChatDBManager;
 import cn.ucai.superwechat.domain.Result;
 import cn.ucai.superwechat.net.NetDao;
+import cn.ucai.superwechat.net.OnCompletListener;
 import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.L;
-import cn.ucai.superwechat.utils.OkHttpUtils;
+import cn.ucai.superwechat.utils.MD5;
+import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.utils.ResultUtils;
 
 /**
@@ -153,79 +155,19 @@ public class LoginActivity extends BaseActivity {
         SuperWeChatHelper.getInstance().setCurrentUserName(currentUsername);
 
         final long start = System.currentTimeMillis();
-        //登录自己的服务器
-        loginAPPServer();
         //登录环信的服务器
         loginEMServer();
-    }
-
-    private void loginAPPServer() {
-        NetDao.login(this, currentUsername, currentPassword, new OkHttpUtils.OnCompleteListener<String>() {
-            @Override
-            public void onSuccess(String s) {
-                L.e(TAG, "login,s=" + s);
-                if (s != null) {
-                    Result result = ResultUtils.getResultFromJson(s, User.class);
-                    L.e(TAG, "result=" + result);
-                    if (result != null) {
-                        loginEMServer();
-                    } else {
-                        pd.dismiss();
-                        if (result.getRetCode() == I.MSG_LOGIN_UNKNOW_USER) {
-                            CommonUtils.showShortToast("账户不存在");
-                        } else if (result.getRetCode() == I.MSG_LOGIN_ERROR_PASSWORD) {
-                            CommonUtils.showShortToast("账户密码错误");
-                        } else {
-                            CommonUtils.showShortToast(R.string.Login_failed);
-                        }
-                    }
-                } else {
-                    pd.dismiss();
-                    CommonUtils.showShortToast(R.string.Login_failed);
-                }
-            }
-
-            @Override
-            public void onError(String error) {
-                pd.dismiss();
-                CommonUtils.showShortToast(R.string.Login_failed);
-                L.e(TAG, "error=" + error);
-            }
-        });
     }
 
     private void loginEMServer() {
         // call login method
         Log.d(TAG, "EMClient.getInstance().login");
-        EMClient.getInstance().login(currentUsername, currentPassword, new EMCallBack() {
+        EMClient.getInstance().login(currentUsername, MD5.getMessageDigest(currentPassword), new EMCallBack() {
 
             @Override
             public void onSuccess() {
                 Log.d(TAG, "login: onSuccess");
-
-
-                // ** manually load all local groups and conversation
-                EMClient.getInstance().groupManager().loadAllGroups();
-                EMClient.getInstance().chatManager().loadAllConversations();
-
-                // update current user's display name for APNs
-                boolean updatenick = EMClient.getInstance().pushManager().updatePushNickname(
-                        SuperWeChatApplication.currentUserNick.trim());
-                if (!updatenick) {
-                    Log.e("LoginActivity", "update current user nick fail");
-                }
-
-                if (!LoginActivity.this.isFinishing() && pd.isShowing()) {
-                    pd.dismiss();
-                }
-                // get user's info (this should be get from App's server or 3rd party service)
-                SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
-
-                Intent intent = new Intent(LoginActivity.this,
-                        MainActivity.class);
-                startActivity(intent);
-
-                finish();
+                loginSuccess();
             }
 
             @Override
@@ -250,6 +192,31 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
+    private void loginSuccess() {
+        // ** manually load all local groups and conversation
+        EMClient.getInstance().groupManager().loadAllGroups();
+        EMClient.getInstance().chatManager().loadAllConversations();
+
+        // update current user's display name for APNs
+        boolean updatenick = EMClient.getInstance().pushManager().updatePushNickname(
+                SuperWeChatApplication.currentUserNick.trim());
+        if (!updatenick) {
+            Log.e("LoginActivity", "update current user nick fail");
+        }
+
+        if (!LoginActivity.this.isFinishing() && pd.isShowing()) {
+            pd.dismiss();
+        }
+        // get user's info (this should be get from App's server or 3rd party service)
+        SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo(this);
+
+        Intent intent = new Intent(LoginActivity.this,
+                MainActivity.class);
+        startActivity(intent);
+
+        finish();
+    }
+
 
     /**
      * register
@@ -268,13 +235,17 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.btn_login, R.id.btn_register})
+    @OnClick({R.id.img_back, R.id.btn_login, R.id.btn_register})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.img_back:
+                MFGT.finish(this);
+                break;
             case R.id.btn_login:
                 login();
                 break;
             case R.id.btn_register:
+                MFGT.gotoRegister(this);
                 break;
         }
     }
