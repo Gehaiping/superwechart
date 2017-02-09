@@ -181,7 +181,7 @@ public class UserProfileManager {
                                 User user = (User) result.getRetData();
                                 //save user inf to db
                                 setCurrentUserNick(user.getMUserNick());
-
+//                                setCurrentUserAvatar(user.getAvatar());
                             }
                         }
                     }
