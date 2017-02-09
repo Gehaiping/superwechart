@@ -2,7 +2,10 @@ package cn.ucai.superwechat.parse;
 
 import android.app.Activity;
 import android.content.Context;
+import android.nfc.Tag;
+import android.util.Log;
 
+import com.alipay.security.mobile.module.commonutils.LOG;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserProfileManager {
+    private static final String TAG = UserProfileManager.class.getSimpleName();
 
     /**
      * application context
@@ -153,9 +157,10 @@ public class UserProfileManager {
 
             @Override
             public void onSuccess(EaseUser value) {
+                L.e(TAG, "asyncGetCurrentUserInfo,value=" + value);
                 if (value != null) {
-                    setCurrentUserNick(value.getNick());
-                    setCurrentUserAvatar(value.getAvatar());
+//                    setCurrentUserNick(value.getNick());
+//                    setCurrentUserAvatar(value.getAvatar());
                 }
             }
 
@@ -169,10 +174,15 @@ public class UserProfileManager {
                 new OnCompletListener<String>() {
                     @Override
                     public void onSuccess(String s) {
+                        L.e("UserProfileManager", "s=" + s);
                         if (s != null) {
                             Result result = ResultUtils.getResultFromJson(s, User.class);
-                            //save user inf to db
+                            if (result != null && result.isRetMsg()) {
+                                User user = (User) result.getRetData();
+                                //save user inf to db
+                                setCurrentUserNick(user.getMUserNick());
 
+                            }
                         }
                     }
 
