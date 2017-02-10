@@ -37,6 +37,11 @@ public class MFGT {
         startActivity(activity, LoginActivity.class);
     }
 
+    public static void gotoLoginCleanTask(Activity activity) {
+        startActivity(activity, new Intent(activity, LoginActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+    }
+
     public static void gotoRegister(Activity activity) {
         startActivity(activity, RegisterActivity.class);
     }

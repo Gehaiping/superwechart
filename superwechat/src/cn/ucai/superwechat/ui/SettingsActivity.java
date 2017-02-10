@@ -436,7 +436,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
                         pd.dismiss();
                         // show login screen
                         finish();
-                        MFGT.gotoLogin(SettingsActivity.this);
+                        MFGT.gotoLoginCleanTask(SettingsActivity.this);
                     }
                 });
             }
