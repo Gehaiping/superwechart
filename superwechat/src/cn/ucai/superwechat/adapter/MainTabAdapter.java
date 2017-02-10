@@ -11,13 +11,13 @@ import java.util.List;
 /**
  * Created by clawpo on 2016/9/22.
  */
-public class MainTabAdpter extends FragmentStatePagerAdapter {
+public class MainTabAdapter extends FragmentStatePagerAdapter {
 
     private final List<Fragment> mFragments = new ArrayList<>();
     private final List<String> mFragmentTitles = new ArrayList<>();
     private FragmentManager fm;
 
-    public MainTabAdpter(FragmentManager fm) {
+    public MainTabAdapter(FragmentManager fm) {
         super(fm);
         this.fm = fm;
         this.saveState();
