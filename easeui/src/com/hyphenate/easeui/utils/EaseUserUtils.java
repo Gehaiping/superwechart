@@ -10,6 +10,7 @@ import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.controller.EaseUI;
 import com.hyphenate.easeui.controller.EaseUI.EaseUserProfileProvider;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 
 public class EaseUserUtils {
     
@@ -30,7 +31,14 @@ public class EaseUserUtils {
         
         return null;
     }
-    
+
+    public static User getAppUserInfo(String username) {
+        if (userProvider != null)
+            return userProvider.getAppUser(username);
+
+        return null;
+    }
+
     /**
      * set user avatar
      * @param username
@@ -63,5 +71,39 @@ public class EaseUserUtils {
         	}
         }
     }
-    
+
+    /**
+     * set user avatar
+     *
+     * @param username
+     */
+    public static void setAppUserAvatar(Context context, String username, ImageView imageView) {
+        User user = getAppUserInfo(username);
+        if (user != null && user.getAvatar() != null) {
+            try {
+                int avatarResId = Integer.parseInt(user.getAvatar());
+                Glide.with(context).load(avatarResId).into(imageView);
+            } catch (Exception e) {
+                //use default avatar
+                Glide.with(context).load(user.getAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.default_hd_avatar).into(imageView);
+            }
+        } else {
+            Glide.with(context).load(R.drawable.default_hd_avatar).into(imageView);
+        }
+    }
+
+    /**
+     * set user's nickname
+     */
+    public static void setAppUserNick(String username, TextView textView) {
+        if (textView != null) {
+            User user = getAppUserInfo(username);
+            if (user != null && user.getMUserNick() != null) {
+                textView.setText(user.getMUserNick());
+            } else {
+                textView.setText(username);
+            }
+        }
+    }
+
 }
