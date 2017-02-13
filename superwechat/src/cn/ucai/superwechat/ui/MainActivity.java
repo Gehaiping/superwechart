@@ -32,6 +32,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -67,6 +68,8 @@ import cn.ucai.superwechat.runtimepermissions.PermissionsManager;
 import cn.ucai.superwechat.runtimepermissions.PermissionsResultAction;
 import cn.ucai.superwechat.widget.DMTabHost;
 import cn.ucai.superwechat.widget.MFViewPager;
+import cn.ucai.superwechat.widget.TitleMenu.ActionItem;
+import cn.ucai.superwechat.widget.TitleMenu.TitlePopup;
 
 @SuppressLint("NewApi")
 public class MainActivity extends BaseActivity implements
@@ -97,6 +100,7 @@ public class MainActivity extends BaseActivity implements
     private boolean isCurrentAccountRemoved = false;
 
     MainTabAdapter adapter;
+    TitlePopup mTitlePopup;
 
     /**
      * check if current user account was remove
@@ -211,6 +215,13 @@ public class MainActivity extends BaseActivity implements
 //		mTabs[0].setSelected(true);
         mTxtLeft.setVisibility(View.VISIBLE);
         mImgRight.setVisibility(View.VISIBLE);
+        mTitlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        mTitlePopup.addAction(new ActionItem(this, R.string.menu_groupchat, R.drawable.icon_menu_group));
+        mTitlePopup.addAction(new ActionItem(this, R.string.menu_addfriend, R.drawable.icon_menu_addfriend));
+        mTitlePopup.addAction(new ActionItem(this, R.string.menu_qrcode, R.drawable.icon_menu_sao));
+        mTitlePopup.addAction(new ActionItem(this, R.string.menu_money, R.drawable.icon_menu_money));
+
     }
 
     /**
@@ -343,7 +354,8 @@ public class MainActivity extends BaseActivity implements
     }
 
     @OnClick(R.id.img_right)
-    public void onClick() {
+    public void showPopup() {
+        mTitlePopup.show(findViewById(R.id.layout_title));
     }
 
     @Override
