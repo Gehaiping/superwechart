@@ -1,6 +1,5 @@
 package cn.ucai.superwechat.ui;
 
-import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -16,14 +15,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseImageUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
@@ -31,7 +27,6 @@ import com.hyphenate.easeui.utils.EaseUserUtils;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -86,8 +81,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     private void initListener() {
         String username = EMClient.getInstance().getCurrentUser();
         mTvUserinfoName.setText("微信号：" + username);
-        EaseUserUtils.setUserNick(username, mTvUserinfoNick);
-        EaseUserUtils.setUserAvatar(this, username, mIvUserinfoAvatar);
+        EaseUserUtils.setAppUserNick(username, mTvUserinfoNick);
+        EaseUserUtils.setAppUserAvatar(this, username, mIvUserinfoAvatar);
     }
 
 
@@ -269,8 +264,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
     }
 
-    private void uploadAppUserAvatar(Intent pidata) {
-        File file = saveBitmapFile(pidata);
+    private void uploadAppUserAvatar(Intent picdata) {
+        File file = saveBitmapFile(picdata);
         L.e(TAG, "file=" + file);
         if (file == null) {
             return;
@@ -290,7 +285,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                                     if (user != null) {
                                         PreferenceManager.getInstance().setCurrentUserAvatar(user.getAvatar());
                                         SuperWeChatHelper.getInstance().saveAppContact(user);
-                                        EaseUserUtils.setUserAvatar(UserProfileActivity.this,
+                                        EaseUserUtils.setAppUserAvatar(UserProfileActivity.this,
                                                 user.getMUserName(), mIvUserinfoAvatar);
                                         CommonUtils.showShortToast(R.string.toast_updatephoto_success);
                                     }
