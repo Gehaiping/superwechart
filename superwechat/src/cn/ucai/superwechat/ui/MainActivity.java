@@ -66,6 +66,9 @@ import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.runtimepermissions.PermissionsManager;
 import cn.ucai.superwechat.runtimepermissions.PermissionsResultAction;
+import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.L;
+import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.widget.DMTabHost;
 import cn.ucai.superwechat.widget.MFViewPager;
 import cn.ucai.superwechat.widget.TitleMenu.ActionItem;
@@ -222,7 +225,29 @@ public class MainActivity extends BaseActivity implements
         mTitlePopup.addAction(new ActionItem(this, R.string.menu_qrcode, R.drawable.icon_menu_sao));
         mTitlePopup.addAction(new ActionItem(this, R.string.menu_money, R.drawable.icon_menu_money));
 
+        mTitlePopup.setItemOnClickListener(listener);
     }
+
+    TitlePopup.OnItemOnClickListener listener = new TitlePopup.OnItemOnClickListener() {
+        @Override
+        public void onItemClick(ActionItem item, int position) {
+            L.e(TAG, "item=" + item + ",position=" + position);
+            switch (position) {
+                case 0:
+                    CommonUtils.showShortToast("发起群聊");
+                    break;
+                case 1:
+                    MFGT.gotoAddContact(MainActivity.this);
+                    break;
+                case 2:
+                    CommonUtils.showShortToast("扫一扫");
+                    break;
+                case 3:
+                    CommonUtils.showShortToast("微信钱包");
+                    break;
+            }
+        }
+    };
 
     /**
      * on tab clicked
