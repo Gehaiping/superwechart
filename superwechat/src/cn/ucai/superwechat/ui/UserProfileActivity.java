@@ -41,6 +41,7 @@ import cn.ucai.superwechat.net.OnCompletListener;
 import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.PreferenceManager;
 import cn.ucai.superwechat.utils.ResultUtils;
 
 public class UserProfileActivity extends BaseActivity implements OnClickListener {
@@ -141,14 +142,13 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         builder.create().show();
     }
 
-
     private void updateRemoteNick(final String nickName) {
-        dialog.dismiss();
         dialog = ProgressDialog.show(this, getString(R.string.dl_update_nick), getString(R.string.dl_waiting));
         NetDao.updateUsernick(this, EMClient.getInstance().getCurrentUser(), nickName,
                 new OnCompletListener<String>() {
                     @Override
                     public void onSuccess(String s) {
+                        dialog.dismiss();
                         if (s != null) {
                             Result result = ResultUtils.getResultFromJson(s, User.class);
                             if (result != null) {
@@ -156,11 +156,14 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                                     User user = (User) result.getRetData();
                                     if (user != null) {
                                         L.e(TAG, "user=" + user);
+                                        PreferenceManager.getInstance().setCurrentUserNick(nickName);
+                                        SuperWeChatHelper.getInstance().saveAppContact(user);
+                                        mTvUserinfoNick.setText(nickName);
                                         CommonUtils.showShortToast(R.string.toast_updatenick_success);
                                     }
                                 } else {
                                     if (result.getRetCode() == I.MSG_USER_SAME_NICK) {
-                                        CommonUtils.showShortToast("昵称为修改");
+                                        CommonUtils.showShortToast("昵称未修改");
                                     } else {
                                         CommonUtils.showShortToast(R.string.toast_updatenick_fail);
                                     }
@@ -175,7 +178,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
                     @Override
                     public void onError(String error) {
-                        L.e(TAG, "error=" + error);
+                        L.e(TAG, "错误 error=" + error);
                         dialog.dismiss();
                         CommonUtils.showShortToast(R.string.toast_updatenick_fail);
                     }
