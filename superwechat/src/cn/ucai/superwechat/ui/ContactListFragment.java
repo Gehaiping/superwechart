@@ -45,10 +45,10 @@ import android.widget.Toast;
 
 /**
  * contact list
- * 
+ *
  */
 public class ContactListFragment extends EaseContactListFragment {
-	
+
     private static final String TAG = ContactListFragment.class.getSimpleName();
     private ContactSyncListener contactSyncListener;
     private BlackListSyncListener blackListSyncListener;
@@ -66,16 +66,15 @@ public class ContactListFragment extends EaseContactListFragment {
         applicationItem = (ContactItemView) headerView.findViewById(R.id.application_item);
         applicationItem.setOnClickListener(clickListener);
         headerView.findViewById(R.id.group_item).setOnClickListener(clickListener);
-        headerView.findViewById(R.id.chat_room_item).setOnClickListener(clickListener);
-        headerView.findViewById(R.id.robot_item).setOnClickListener(clickListener);
         listView.addHeaderView(headerView);
         //add loading view
         loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.em_layout_loading_data, null);
         contentContainer.addView(loadingView);
 
         registerForContextMenu(listView);
+        hideTitleBar();
     }
-    
+
     @Override
     public void refresh() {
         Map<String, EaseUser> m = SuperWeChatHelper.getInstance().getContactList();
@@ -94,14 +93,14 @@ public class ContactListFragment extends EaseContactListFragment {
             applicationItem.hideUnreadMsgView();
         }
     }
-    
-    
+
+
     @SuppressWarnings("unchecked")
     @Override
     protected void setUpView() {
         titleBar.setRightImageResource(R.drawable.em_add);
         titleBar.setRightLayoutClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
 //                startActivity(new Intent(getActivity(), AddContactActivity.class));
@@ -128,7 +127,7 @@ public class ContactListFragment extends EaseContactListFragment {
             }
         });
 
-        
+
         // 进入添加好友页
         titleBar.getRightLayout().setOnClickListener(new OnClickListener() {
 
@@ -137,24 +136,24 @@ public class ContactListFragment extends EaseContactListFragment {
                 startActivity(new Intent(getActivity(), AddContactActivity.class));
             }
         });
-        
-        
+
+
         contactSyncListener = new ContactSyncListener();
         SuperWeChatHelper.getInstance().addSyncContactListener(contactSyncListener);
-        
+
         blackListSyncListener = new BlackListSyncListener();
         SuperWeChatHelper.getInstance().addSyncBlackListListener(blackListSyncListener);
-        
+
         contactInfoSyncListener = new ContactInfoSyncListener();
         SuperWeChatHelper.getInstance().getUserProfileManager().addSyncContactInfoListener(contactInfoSyncListener);
-        
+
         if (SuperWeChatHelper.getInstance().isContactsSyncedWithServer()) {
             loadingView.setVisibility(View.GONE);
         } else if (SuperWeChatHelper.getInstance().isSyncingContactsWithServer()) {
             loadingView.setVisibility(View.VISIBLE);
         }
     }
-    
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -162,18 +161,18 @@ public class ContactListFragment extends EaseContactListFragment {
             SuperWeChatHelper.getInstance().removeSyncContactListener(contactSyncListener);
             contactSyncListener = null;
         }
-        
+
         if(blackListSyncListener != null){
             SuperWeChatHelper.getInstance().removeSyncBlackListListener(blackListSyncListener);
         }
-        
+
         if(contactInfoSyncListener != null){
             SuperWeChatHelper.getInstance().getUserProfileManager().removeSyncContactInfoListener(contactInfoSyncListener);
         }
     }
-    
-	
-	protected class HeaderItemClickListener implements OnClickListener{
+
+
+    protected class HeaderItemClickListener implements OnClickListener{
 
         @Override
         public void onClick(View v) {
@@ -186,24 +185,15 @@ public class ContactListFragment extends EaseContactListFragment {
                 // 进入群聊列表页面
                 startActivity(new Intent(getActivity(), GroupsActivity.class));
                 break;
-            case R.id.chat_room_item:
-                //进入聊天室列表页面
-                startActivity(new Intent(getActivity(), PublicChatRoomsActivity.class));
-                break;
-            case R.id.robot_item:
-                //进入Robot列表页面
-                startActivity(new Intent(getActivity(), RobotsActivity.class));
-                break;
-
             default:
                 break;
             }
         }
-	    
-	}
-	
 
-	@Override
+    }
+
+
+    @Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 	    toBeProcessUser = (EaseUser) listView.getItemAtPosition(((AdapterContextMenuInfo) menuInfo).position);
@@ -234,9 +224,9 @@ public class ContactListFragment extends EaseContactListFragment {
 
 	/**
 	 * delete contact
-	 * 
-	 * @param toDeleteUser
-	 */
+     *
+     * @param tobeDeleteUser
+     */
 	public void deleteContact(final EaseUser tobeDeleteUser) {
 		String st1 = getResources().getString(R.string.deleting);
 		final String st2 = getResources().getString(R.string.Delete_failed);
@@ -274,8 +264,8 @@ public class ContactListFragment extends EaseContactListFragment {
 		}).start();
 
 	}
-	
-	class ContactSyncListener implements DataSyncListener{
+
+    class ContactSyncListener implements DataSyncListener{
         @Override
         public void onSyncComplete(final boolean success) {
             EMLog.d(TAG, "on contact list sync success:" + success);
@@ -294,13 +284,13 @@ public class ContactListFragment extends EaseContactListFragment {
                                 loadingView.setVisibility(View.GONE);
                             }
                         }
-                        
+
                     });
                 }
             });
         }
     }
-    
+
     class BlackListSyncListener implements DataSyncListener{
 
         @Override
@@ -313,7 +303,7 @@ public class ContactListFragment extends EaseContactListFragment {
                 }
             });
         }
-        
+
     }
 
     class ContactInfoSyncListener implements DataSyncListener{
@@ -322,7 +312,7 @@ public class ContactListFragment extends EaseContactListFragment {
         public void onSyncComplete(final boolean success) {
             EMLog.d(TAG, "on contactinfo list sync success:" + success);
             getActivity().runOnUiThread(new Runnable() {
-                
+
                 @Override
                 public void run() {
                     loadingView.setVisibility(View.GONE);
@@ -332,7 +322,7 @@ public class ContactListFragment extends EaseContactListFragment {
                 }
             });
         }
-        
+
     }
-	
+
 }
