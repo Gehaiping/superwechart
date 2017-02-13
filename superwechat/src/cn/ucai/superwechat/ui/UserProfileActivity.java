@@ -32,11 +32,13 @@ import java.io.ByteArrayOutputStream;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.domain.Result;
 import cn.ucai.superwechat.net.NetDao;
 import cn.ucai.superwechat.net.OnCompletListener;
+import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.utils.ResultUtils;
@@ -141,36 +143,72 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
 
     private void updateRemoteNick(final String nickName) {
+        dialog.dismiss();
         dialog = ProgressDialog.show(this, getString(R.string.dl_update_nick), getString(R.string.dl_waiting));
-        new Thread(new Runnable() {
+        NetDao.updateUsernick(this, EMClient.getInstance().getCurrentUser(), nickName,
+                new OnCompletListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        if (s != null) {
+                            Result result = ResultUtils.getResultFromJson(s, User.class);
+                            if (result != null) {
+                                if (result.isRetMsg()) {
+                                    User user = (User) result.getRetData();
+                                    if (user != null) {
+                                        L.e(TAG, "user=" + user);
+                                        CommonUtils.showShortToast(R.string.toast_updatenick_success);
+                                    }
+                                } else {
+                                    if (result.getRetCode() == I.MSG_USER_SAME_NICK) {
+                                        CommonUtils.showShortToast("昵称为修改");
+                                    } else {
+                                        CommonUtils.showShortToast(R.string.toast_updatenick_fail);
+                                    }
+                                }
+                            } else {
+                                CommonUtils.showShortToast(R.string.toast_updatenick_fail);
+                            }
+                        } else {
+                            CommonUtils.showShortToast(R.string.toast_updatenick_fail);
+                        }
+                    }
 
-            @Override
-            public void run() {
-                boolean updatenick = SuperWeChatHelper.getInstance().getUserProfileManager().updateCurrentUserNickName(nickName);
-                if (UserProfileActivity.this.isFinishing()) {
-                    return;
-                }
-                if (!updatenick) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatenick_fail), Toast.LENGTH_SHORT)
-                                    .show();
-                            dialog.dismiss();
-                        }
-                    });
-                } else {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            dialog.dismiss();
-                            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatenick_success), Toast.LENGTH_SHORT)
-                                    .show();
-                            mTvUserinfoNick.setText(nickName);
-                        }
-                    });
-                }
-            }
-        }).start();
+                    @Override
+                    public void onError(String error) {
+                        L.e(TAG, "error=" + error);
+                        dialog.dismiss();
+                        CommonUtils.showShortToast(R.string.toast_updatenick_fail);
+                    }
+                });
+//        new Thread(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                boolean updatenick = SuperWeChatHelper.getInstance().getUserProfileManager().updateCurrentUserNickName(nickName);
+//                if (UserProfileActivity.this.isFinishing()) {
+//                    return;
+//                }
+//                if (!updatenick) {
+//                    runOnUiThread(new Runnable() {
+//                        public void run() {
+//                            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatenick_fail), Toast.LENGTH_SHORT)
+//                                    .show();
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                } else {
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            dialog.dismiss();
+//                            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatenick_success), Toast.LENGTH_SHORT)
+//                                    .show();
+//                            mTvUserinfoNick.setText(nickName);
+//                        }
+//                    });
+//                }
+//            }
+//        }).start();
     }
 
     @Override
