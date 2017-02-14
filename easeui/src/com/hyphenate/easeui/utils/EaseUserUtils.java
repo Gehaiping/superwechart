@@ -13,13 +13,13 @@ import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
 
 public class EaseUserUtils {
-    
+
     static EaseUserProfileProvider userProvider;
-    
+
     static {
         userProvider = EaseUI.getInstance().getUserProfileProvider();
     }
-    
+
     /**
      * get EaseUser according username
      * @param username
@@ -28,7 +28,7 @@ public class EaseUserUtils {
     public static EaseUser getUserInfo(String username){
         if(userProvider != null)
             return userProvider.getUser(username);
-        
+
         return null;
     }
 
@@ -57,7 +57,7 @@ public class EaseUserUtils {
             Glide.with(context).load(R.drawable.ease_default_avatar).into(imageView);
         }
     }
-    
+
     /**
      * set user's nickname
      */
@@ -80,12 +80,20 @@ public class EaseUserUtils {
     public static void setAppUserAvatar(Context context, String username, ImageView imageView) {
         User user = getAppUserInfo(username);
         if (user != null && user.getAvatar() != null) {
+            setAppUserAvatarByPath(context, user.getAvatar(), imageView);
+        } else {
+            Glide.with(context).load(R.drawable.default_hd_avatar).into(imageView);
+        }
+    }
+
+    public static void setAppUserAvatarByPath(Context context, String path, ImageView imageView) {
+        if (path != null) {
             try {
-                int avatarResId = Integer.parseInt(user.getAvatar());
+                int avatarResId = Integer.parseInt(path);
                 Glide.with(context).load(avatarResId).into(imageView);
             } catch (Exception e) {
                 //use default avatar
-                Glide.with(context).load(user.getAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.default_hd_avatar).into(imageView);
+                Glide.with(context).load(path).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.default_hd_avatar).into(imageView);
             }
         } else {
             Glide.with(context).load(R.drawable.default_hd_avatar).into(imageView);

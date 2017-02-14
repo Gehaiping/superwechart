@@ -7,8 +7,10 @@ import android.support.v4.app.FragmentActivity;
 
 import com.hyphenate.easeui.domain.User;
 
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.ui.AddContactActivity;
+import cn.ucai.superwechat.ui.FriendProfileActivity;
 import cn.ucai.superwechat.ui.GuideActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.RegisterActivity;
@@ -67,6 +69,7 @@ public class MFGT {
     }
 
     public static void gotoFriend(Activity activity, User user) {
-
+        startActivity(activity, new Intent(activity, FriendProfileActivity.class)
+                .putExtra(I.User.USER_NAME, user));
     }
 }
