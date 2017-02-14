@@ -29,13 +29,16 @@ public class DbOpenHelper extends SQLiteOpenHelper{
 			+ UserDao.COLUMN_NAME_NICK + " TEXT, "
 			+ UserDao.COLUMN_NAME_AVATAR + " TEXT, "
 			+ UserDao.COLUMN_NAME_ID + " TEXT PRIMARY KEY);";
-	
+
 	private static final String INIVTE_MESSAGE_TABLE_CREATE = "CREATE TABLE "
 			+ InviteMessgeDao.TABLE_NAME + " ("
 			+ InviteMessgeDao.COLUMN_NAME_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ InviteMessgeDao.COLUMN_NAME_FROM + " TEXT, "
 			+ InviteMessgeDao.COLUMN_NAME_GROUP_ID + " TEXT, "
 			+ InviteMessgeDao.COLUMN_NAME_GROUP_Name + " TEXT, "
+			+ InviteMessgeDao.COLUMN_NAME_NICKNAME + " TEXT, "
+			+ InviteMessgeDao.COLUMN_NAME_AVATAR_SUFFIX + " TEXT, "
+			+ InviteMessgeDao.COLUMN_NAME_AVATAR_TIME + " TEXT, "
 			+ InviteMessgeDao.COLUMN_NAME_REASON + " TEXT, "
 			+ InviteMessgeDao.COLUMN_NAME_STATUS + " INTEGER, "
 			+ InviteMessgeDao.COLUMN_NAME_ISINVITEFROMME + " INTEGER, "
