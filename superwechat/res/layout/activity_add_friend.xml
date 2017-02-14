@@ -11,9 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_margin="10dp"
-        android:background="@drawable/em_btn_gray_normal_shape"
+        android:background="@drawable/em_button_normal_shape"
         android:paddingLeft="5dp"
         android:singleLine="true"
         android:textColorHint="#b3b3b3"
         android:textSize="18sp" />
+
 </LinearLayout>
