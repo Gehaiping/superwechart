@@ -85,7 +85,12 @@ public class FriendProfileActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.img_back)
-    public void onClick() {
+    public void imgBack() {
         MFGT.finish(this);
+    }
+
+    @OnClick(R.id.btn_add_contact)
+    public void sendAddContactMsg() {
+        MFGT.gotoAddFriend(this, user.getMUserName());
     }
 }
