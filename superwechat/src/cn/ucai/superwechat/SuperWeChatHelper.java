@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.easemob.redpacketsdk.constant.RPConstant;
@@ -33,14 +34,21 @@ import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.EmojiconExampleGroupData;
 import cn.ucai.superwechat.domain.InviteMessage;
+import cn.ucai.superwechat.domain.Result;
 import cn.ucai.superwechat.domain.RobotUser;
+import cn.ucai.superwechat.net.NetDao;
+import cn.ucai.superwechat.net.OnCompletListener;
 import cn.ucai.superwechat.parse.UserProfileManager;
 import cn.ucai.superwechat.receiver.CallReceiver;
+import cn.ucai.superwechat.ui.AddContactActivity;
 import cn.ucai.superwechat.ui.ChatActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.VideoCallActivity;
 import cn.ucai.superwechat.ui.VoiceCallActivity;
+import cn.ucai.superwechat.utils.L;
+import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.utils.PreferenceManager;
+import cn.ucai.superwechat.utils.ResultUtils;
 
 import com.hyphenate.easeui.controller.EaseUI;
 import com.hyphenate.easeui.controller.EaseUI.EaseSettingsProvider;
@@ -658,6 +666,7 @@ public class SuperWeChatHelper {
 
         @Override
         public void onContactAdded(String username) {
+            L.e(TAG, "onContactAdded...username=" + username);
             // save contact
             Map<String, EaseUser> localUsers = getContactList();
             Map<String, EaseUser> toAddUsers = new HashMap<String, EaseUser>();
@@ -674,6 +683,7 @@ public class SuperWeChatHelper {
 
         @Override
         public void onContactDeleted(String username) {
+            L.e(TAG, "onContactDeleted...username=" + username);
             Map<String, EaseUser> localUsers = SuperWeChatHelper.getInstance().getContactList();
             localUsers.remove(username);
             userDao.deleteContact(username);
@@ -684,6 +694,7 @@ public class SuperWeChatHelper {
 
         @Override
         public void onContactInvited(String username, String reason) {
+            L.e(TAG, "onContactInvited...username=" + username);
             List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
 
             for (InviteMessage inviteMessage : msgs) {
@@ -705,6 +716,7 @@ public class SuperWeChatHelper {
 
         @Override
         public void onFriendRequestAccepted(String username) {
+            L.e(TAG, "onFriendRequestAccepted...username=" + username);
             List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
             for (InviteMessage inviteMessage : msgs) {
                 if (inviteMessage.getFrom().equals(username)) {
@@ -723,6 +735,7 @@ public class SuperWeChatHelper {
 
         @Override
         public void onFriendRequestDeclined(String username) {
+            L.e(TAG, "onFriendRequestDeclined...username=" + username);
             // your request was refused
             Log.d(username, username + " refused to your request");
         }
@@ -733,11 +746,36 @@ public class SuperWeChatHelper {
      *
      * @param msg
      */
-    private void notifyNewInviteMessage(InviteMessage msg) {
+    private void notifyNewInviteMessage(final InviteMessage msg) {
+        L.e(TAG, "notifyNewInviteMessage.............");
         if (inviteMessgeDao == null) {
             inviteMessgeDao = new InviteMessgeDao(appContext);
         }
-        inviteMessgeDao.saveMessage(msg);
+        NetDao.getUserInfoByUsername(appContext, msg.getFrom(), new OnCompletListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                if (s != null) {
+                    Result result = ResultUtils.getResultFromJson(s, User.class);
+                    if (result.isRetMsg()) {
+                        User user = (User) result.getRetData();
+                        if (user != null) {
+                            msg.setUsernick(user.getMUserNick());
+                            msg.setAvatarSuffix(user.getMAvatarSuffix());
+                            msg.setAvatarTime(user.getMAvatarLastUpdateTime());
+                        }
+                    }
+                }
+                inviteMessgeDao.saveMessage(msg);
+            }
+
+            @Override
+            public void onError(String error) {
+                inviteMessgeDao.saveMessage(msg);
+            }
+        });
+        if (inviteMessgeDao == null) {
+            inviteMessgeDao = new InviteMessgeDao(appContext);
+        }
         //increase the unread message count
         inviteMessgeDao.saveUnreadMessageCount(1);
         // notify there is new message
