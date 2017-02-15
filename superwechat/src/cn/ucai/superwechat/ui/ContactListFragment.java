@@ -25,6 +25,7 @@ import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.widget.ContactItemView;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.ui.EaseContactListFragment;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.NetUtils;
@@ -77,10 +78,10 @@ public class ContactListFragment extends EaseContactListFragment {
 
     @Override
     public void refresh() {
-        Map<String, EaseUser> m = SuperWeChatHelper.getInstance().getContactList();
+        Map<String, User> m = SuperWeChatHelper.getInstance().getAppContactList();
         if (m instanceof Hashtable<?, ?>) {
             //noinspection unchecked
-            m = (Map<String, EaseUser>) ((Hashtable<String, EaseUser>)m).clone();
+            m = (Map<String, User>) ((Hashtable<String, User>) m).clone();
         }
         setContactsMap(m);
         super.refresh();
@@ -108,9 +109,9 @@ public class ContactListFragment extends EaseContactListFragment {
             }
         });
         //设置联系人数据
-        Map<String, EaseUser> m = SuperWeChatHelper.getInstance().getContactList();
+        Map<String, User> m = SuperWeChatHelper.getInstance().getAppContactList();
         if (m instanceof Hashtable<?, ?>) {
-            m = (Map<String, EaseUser>) ((Hashtable<String, EaseUser>)m).clone();
+            m = (Map<String, User>) ((Hashtable<String, User>) m).clone();
         }
         setContactsMap(m);
         super.setUpView();
@@ -196,9 +197,9 @@ public class ContactListFragment extends EaseContactListFragment {
     @Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-	    toBeProcessUser = (EaseUser) listView.getItemAtPosition(((AdapterContextMenuInfo) menuInfo).position);
-	    toBeProcessUsername = toBeProcessUser.getUsername();
-		getActivity().getMenuInflater().inflate(R.menu.em_context_contact_list, menu);
+        toBeProcessUser = (User) listView.getItemAtPosition(((AdapterContextMenuInfo) menuInfo).position);
+        toBeProcessUsername = toBeProcessUser.getMUserName();
+        getActivity().getMenuInflater().inflate(R.menu.em_context_contact_list, menu);
 	}
 
 	@Override
@@ -209,7 +210,7 @@ public class ContactListFragment extends EaseContactListFragment {
                 deleteContact(toBeProcessUser);
                 // remove invitation message
                 InviteMessgeDao dao = new InviteMessgeDao(getActivity());
-                dao.deleteMessage(toBeProcessUser.getUsername());
+                dao.deleteMessage(toBeProcessUser.getMUserName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -227,8 +228,8 @@ public class ContactListFragment extends EaseContactListFragment {
      *
      * @param tobeDeleteUser
      */
-	public void deleteContact(final EaseUser tobeDeleteUser) {
-		String st1 = getResources().getString(R.string.deleting);
+    public void deleteContact(final User tobeDeleteUser) {
+        String st1 = getResources().getString(R.string.deleting);
 		final String st2 = getResources().getString(R.string.Delete_failed);
 		final ProgressDialog pd = new ProgressDialog(getActivity());
 		pd.setMessage(st1);
@@ -237,12 +238,12 @@ public class ContactListFragment extends EaseContactListFragment {
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					EMClient.getInstance().contactManager().deleteContact(tobeDeleteUser.getUsername());
-					// remove user from memory and database
+                    EMClient.getInstance().contactManager().deleteContact(tobeDeleteUser.getMUserName());
+                    // remove user from memory and database
 					UserDao dao = new UserDao(getActivity());
-					dao.deleteContact(tobeDeleteUser.getUsername());
-					SuperWeChatHelper.getInstance().getContactList().remove(tobeDeleteUser.getUsername());
-					getActivity().runOnUiThread(new Runnable() {
+                    dao.deleteContact(tobeDeleteUser.getMUserName());
+                    SuperWeChatHelper.getInstance().getContactList().remove(tobeDeleteUser.getMUserName());
+                    getActivity().runOnUiThread(new Runnable() {
 						public void run() {
 							pd.dismiss();
 							contactList.remove(tobeDeleteUser);
