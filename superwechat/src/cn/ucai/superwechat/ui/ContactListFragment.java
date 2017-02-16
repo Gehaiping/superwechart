@@ -257,6 +257,7 @@ public class ContactListFragment extends EaseContactListFragment {
                                         pd.dismiss();
                                         contactList.remove(tobeDeleteUser);
                                         contactListLayout.refresh();
+                                        getActivity().sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
 
                                     }
                                 });
