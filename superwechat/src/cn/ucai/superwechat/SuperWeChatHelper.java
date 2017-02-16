@@ -1191,11 +1191,50 @@ public class SuperWeChatHelper {
     }
 
     public void asyncFetchContactsFromServer(final EMValueCallBack<List<String>> callback) {
+        L.e(TAG, "asyncFetchContactsFromServer,isSyncingContactsWithServer===" + isSyncingContactsWithServer);
         if (isSyncingContactsWithServer) {
             return;
         }
 
         isSyncingContactsWithServer = true;
+
+        L.e(TAG, "asyncFetchContactsFromServer,isLoggedIn()===" + isLoggedIn());
+
+        if (isLoggedIn()) {
+            NetDao.loadContact(appContext, EMClient.getInstance().getCurrentUser(),
+                    new OnCompletListener<String>() {
+                        @Override
+                        public void onSuccess(String s) {
+                            L.e(TAG, "asyncFetchContactsFromServer===" + s);
+                            if (s != null) {
+                                Result result = ResultUtils.getListResultFromJson(s, User.class);
+                                if (result != null && result.isRetMsg()) {
+                                    List<User> list = (List<User>) result.getRetData();
+                                    if (list != null && list.size() > 0) {
+                                        L.e(TAG, "list.size()===" + list.size());
+                                        Map<String, User> userMap = new HashMap<String, User>();
+                                        for (User u : list) {
+                                            EaseCommonUtils.setAppUserInitialLetter(u);
+                                            userMap.put(u.getMUserName(), u);
+                                        }
+                                        // save the contact list to cache
+                                        getAppContactList().clear();
+                                        getAppContactList().putAll(userMap);
+                                        // save the contact list to database
+                                        UserDao dao = new UserDao(appContext);
+                                        dao.saveAppContactList(list);
+                                        broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onError(String error) {
+
+                        }
+                    });
+        }
 
         new Thread() {
             @Override
@@ -1210,38 +1249,6 @@ public class SuperWeChatHelper {
                         notifyContactsSyncListener(false);
                         return;
                     }
-
-                    NetDao.loadContact(appContext, EMClient.getInstance().getCurrentUser(),
-                            new OnCompletListener<String>() {
-                                @Override
-                                public void onSuccess(String s) {
-                                    if (s != null) {
-                                        Result result = ResultUtils.getListResultFromJson(s, User.class);
-                                        if (result != null && result.isRetMsg()) {
-                                            List<User> list = (List<User>) result.getRetData();
-                                            if (list != null && list.size() > 0) {
-                                                Map<String, User> userMap = new HashMap<String, User>();
-                                                for (User u : list) {
-                                                    EaseCommonUtils.setAppUserInitialLetter(u);
-                                                    userMap.put(username, u);
-                                                }
-                                                // save the contact list to cache
-                                                getAppContactList().clear();
-                                                getAppContactList().putAll(userMap);
-                                                // save the contact list to database
-                                                UserDao dao = new UserDao(appContext);
-                                                dao.saveAppContactList(list);
-                                                broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
-                                            }
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onError(String error) {
-
-                                }
-                            });
 
                     Map<String, EaseUser> userlist = new HashMap<String, EaseUser>();
                     for (String username : usernames) {
