@@ -208,4 +208,8 @@ public interface I {
 	String REQUEST_DOWNLOAD_LOCATION 				= 		"downloadLocation";
 
 	String BACK_MAIN_FROM_CHAT = "back_main_from_chat";
+
+	int REQUESTCODE_PICK = 1;
+	int REQUESTCODE_CUTTING = 2;
+	int REQUESTCODE_MEMBER = 3;
 }

@@ -117,7 +117,7 @@ public class NetDao {
                 .addParam(I.Group.IS_PUBLIC, String.valueOf(group.isPublic()))
                 .addParam(I.Group.ALLOW_INVITES, String.valueOf(group.isAllowInvites()))
                 .targetClass(String.class)
-//                .addFile2(file)
+                .addFile2(file)
                 .post()
                 .execute(listener);
     }
