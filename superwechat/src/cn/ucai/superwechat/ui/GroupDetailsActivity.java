@@ -140,7 +140,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		EMClient.getInstance().groupManager().addGroupChangeListener(groupChangeListener);
 		
 		((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "(" + group.getMemberCount() + st);
-		
+
 		List<String> members = new ArrayList<String>();
 		members.addAll(group.getMembers());
 		
@@ -221,6 +221,20 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				if(!TextUtils.isEmpty(returnData)){
 					progressDialog.setMessage(st5);
 					progressDialog.show();
+
+					NetDao.updateGroupName(GroupDetailsActivity.this, groupId, returnData,
+							new OnCompletListener<String>() {
+								@Override
+								public void onSuccess(String s) {
+									L.e(TAG, "REQUEST_CODE_EDIT_GROUPNAME,s======" + s);
+
+								}
+
+								@Override
+								public void onError(String error) {
+
+								}
+							});
 					
 					new Thread(new Runnable() {
 						public void run() {
