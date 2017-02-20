@@ -25,10 +25,10 @@ public class InviteMessage {
 	private String groupId;
 	private String groupName;
 	private String groupInviter;
-	
+
 
 	private int id;
-	
+
 	public String getFrom() {
 		return from;
 	}
@@ -62,8 +62,7 @@ public class InviteMessage {
 		this.status = status;
 	}
 
-	
-	
+
 	public int getId() {
 		return id;
 	}
@@ -87,13 +86,13 @@ public class InviteMessage {
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
-	
+
 	public void setGroupInviter(String inviter) {
 	    groupInviter = inviter;
 	}
-	
+
 	public String getGroupInviter() {
-	    return groupInviter;	    
+		return groupInviter;
 	}
 
 	public String getUsernick() {
@@ -121,15 +120,15 @@ public class InviteMessage {
 	}
 
 	public enum InviteMesageStatus{
-	    
-	    //==contact
+
+		//==contact
 		/**being invited*/
 		BEINVITEED,
 		/**being refused*/
 		BEREFUSED,
 		/**remote user already agreed*/
 		BEAGREED,
-		
+
 		//==group application
 		/**remote user apply to join*/
 		BEAPPLYED,
@@ -137,7 +136,7 @@ public class InviteMessage {
 		AGREED,
 		/**you refused the join request*/
 		REFUSED,
-		
+
 		//==group invitation
 		/**received remote user's invitation**/
 		GROUPINVITATION,
@@ -148,8 +147,14 @@ public class InviteMessage {
 	}
 
 	public String getAvatar() {
-		String path = "http://101.251.196.90:8000/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid=" + getFrom() + "&avatarType=user_avatar&m_avatar_suffix=" + getAvatarSuffix() + "&updatetime=" + getAvatarTime();
-		return path;
+		if (groupId == null) {
+			return "http://101.251.196.90:8000/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid="
+					+ getFrom() + "&avatarType=user_avatar&m_avatar_suffix=" + getAvatarSuffix()
+					+ "&updatetime=" + getAvatarTime();
+		} else {
+			return "http://101.251.196.90:8000/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid="
+					+ groupId + "&avatarType=group_icon&m_avatar_suffix=.jpg";
+		}
 	}
 
 	@Override

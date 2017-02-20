@@ -97,7 +97,7 @@ public class FriendProfileActivity extends AppCompatActivity {
 
     private void showUserInfo() {
         mTvUserinfoNick.setText(user.getMUserNick());
-        EaseUserUtils.setAppUserAvatarByPath(this, user.getAvatar(), mProfileImage);
+        EaseUserUtils.setAppUserAvatarByPath(this, user.getAvatar(), mProfileImage, null);
         mTvUserinfoName.setText("微信号：" + user.getMUserName());
         if (isFriend()) {
             mBtnSendMsg.setVisibility(View.VISIBLE);
