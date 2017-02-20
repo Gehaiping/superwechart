@@ -83,6 +83,11 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         EaseUserUtils.setAppUserAvatar(this, username, mIvUserinfoAvatar);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        asyncFetchUserInfo(EMClient.getInstance().getCurrentUser());
+    }
 
     public void asyncFetchUserInfo(String username) {
         NetDao.getUserInfoByUsername(this, username, new OnCompletListener<String>() {
