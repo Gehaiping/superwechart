@@ -251,7 +251,7 @@ public class NewGroupActivity extends BaseActivity {
                 });
     }
 
-    private String getGroupMembers(String[] members) {
+    private String getGroupMembers(String[] members) {//将数组转化为字符串
         String membersStr = " ";
         if (members.length > 0) {
             for (String s : members) {

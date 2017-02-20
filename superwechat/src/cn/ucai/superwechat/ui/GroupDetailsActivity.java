@@ -425,6 +425,21 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 							progressDialog.dismiss();
 						}
 					});
+
+					NetDao.addGroupMembers(getContext(), getGroupMembers(newmembers), groupId,
+							new OnCompletListener<String>() {
+								@Override
+								public void onSuccess(String s) {
+									L.e(TAG, "addMembersToGroup,s====" + s);
+
+								}
+
+								@Override
+								public void onError(String error) {
+
+								}
+							});
+
 				} catch (final Exception e) {
 					runOnUiThread(new Runnable() {
 						public void run() {
@@ -435,6 +450,17 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				}
 			}
 		}).start();
+	}
+
+	private String getGroupMembers(String[] members) {//将数组转化为字符串
+		String membersStr = " ";
+		if (members.length > 0) {
+			for (String s : members) {
+				membersStr += s + ",";
+			}
+		}
+		L.e(TAG, "getGroupMembers,s===" + membersStr);
+		return membersStr;
 	}
 
 	@Override
