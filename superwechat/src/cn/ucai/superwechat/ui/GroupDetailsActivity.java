@@ -213,7 +213,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 			case REQUEST_CODE_EXIT_DELETE: // 解散群
 				progressDialog.setMessage(st3);
 				progressDialog.show();
-				deleteGrop();
+				deleteGroup();
 				break;
 
 			case REQUEST_CODE_EDIT_GROUPNAME: //修改群名称
@@ -344,7 +344,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	 */
 	private void exitGrop() {
 		String st1 = getResources().getString(R.string.Exit_the_group_chat_failure);
-		NetDao.deleteGroupMember(getContext(), groupId, EMClient.getInstance().getCurrentUser(),
+		NetDao.deleteGroupMember(GroupDetailsActivity.this, groupId, EMClient.getInstance().getCurrentUser(),
 				new OnCompletListener<String>() {
 					@Override
 					public void onSuccess(String s) {
@@ -386,8 +386,22 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	 * 解散群组
 	 * 
 	 */
-	private void deleteGrop() {
+	private void deleteGroup() {
 		final String st5 = getResources().getString(R.string.Dissolve_group_chat_tofail);
+
+		NetDao.deleteGroup(GroupDetailsActivity.this, groupId, new OnCompletListener<String>() {
+			@Override
+			public void onSuccess(String s) {
+				L.e(TAG, "deleteGroup,s=======" + s);
+
+			}
+
+			@Override
+			public void onError(String error) {
+
+			}
+		});
+
 		new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -440,7 +454,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 						}
 					});
 
-					NetDao.addGroupMembers(getContext(), getGroupMembers(newmembers), groupId,
+					NetDao.addGroupMembers(GroupDetailsActivity.this, getGroupMembers(newmembers), groupId,
 							new OnCompletListener<String>() {
 								@Override
 								public void onSuccess(String s) {
@@ -779,7 +793,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 						deleteDialog.setCanceledOnTouchOutside(false);
 						deleteDialog.show();
 
-						NetDao.deleteGroupMember(getContext(), groupId, username,
+						NetDao.deleteGroupMember(GroupDetailsActivity.this, groupId, username,
 								new OnCompletListener<String>() {
 									@Override
 									public void onSuccess(String s) {
