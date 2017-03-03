@@ -1,7 +1,5 @@
 package com.hyphenate.easeui.domain;
 
-import com.hyphenate.easeui.utils.EaseCommonUtils;
-
 import java.io.Serializable;
 
 public class User implements Serializable {
@@ -132,7 +130,7 @@ public class User implements Serializable {
 	}
 
 	public String getAvatar() {
-		String path = "http://101.251.196.90:8000/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid="+getMUserName()+"&avatarType=user_avatar&m_avatar_suffix="+getMAvatarSuffix()+"&updatetime="+getMAvatarLastUpdateTime();
+		String path = "http://101.251.196.91:8888/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid=" + getMUserName() + "&avatarType=user_avatar&m_avatar_suffix=" + getMAvatarSuffix() + "&updatetime=" + getMAvatarLastUpdateTime();
 		return path;
 	}
 }
